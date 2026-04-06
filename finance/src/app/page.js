@@ -31,7 +31,7 @@ export default function Home() {
 
   useEffect(function(){
     setType("Expense")
-  })
+  }, [page])
 
   useEffect(function(){
     let totalIncome = 0
@@ -238,6 +238,7 @@ export default function Home() {
 
   function DeleteExpense(index){
     let to_delete = expenses[index].expense
+    let date = expenses[index].date
     let update_expense = [...expenses].filter((expense, i) => (i != index))
 
     setExpense(update_expense)
@@ -250,7 +251,8 @@ export default function Home() {
     
     }
     else if(typ == "Expense" && sorting){
-      let date = dateRef.current.value
+      
+      
       
       let year_month_day = date.split("-")
 
@@ -265,11 +267,24 @@ export default function Home() {
         }
       }
 
+    
+
       let sub = parseInt(ChartRef.current.data.datasets[0].data[index])
       
+      
       let prev = parseInt(to_delete)
+      
     
-      ChartRef.current.data.datasets[0].data[index] = sub - prev
+      if(sub - prev == 0){
+        ChartRef.current.data.datasets[0].data.splice(index, 1)
+        
+        ChartRef.current.data.labels.splice(index, 1)
+      }
+
+      else{
+        ChartRef.current.data.datasets[0].data[index] = sub - prev
+      }
+    
       ChartRef.current.update()
 
 
@@ -282,6 +297,7 @@ export default function Home() {
 
   function DeleteIncome(index){
     let to_delete = incomes[index].expense
+    let date = incomes[index].date
     let update_expense = [...incomes].filter((expense, i) => (i != index))
 
     setIncomes(update_expense)
@@ -295,7 +311,7 @@ export default function Home() {
     }
 
     else if(typ == "Income" && sorting){
-      let date = dateRef.current.value
+      
       
       let year_month_day = date.split("-")
 
